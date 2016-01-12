@@ -1,0 +1,15 @@
+MAINTAINER Andy Neff <andrew.neff@vsi-ri.com>
+
+#TODO, use USER_UID, USER_GID, and USER_NAME, (with default values... dev, 1000, 50 I guess?)
+
+RUN groupadd -g 1500 dev && \
+    useradd -u 1500 -g 1500 dev && \
+    echo "dev ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    sed -i '/requiretty/d' /etc/sudoers
+
+RUN (groupmod -g [{USER_GID:50}] dev || usermod -g [{USER_GID:50}] dev) && \
+    usermod -u [{USER_UID:1000}] dev && \
+    chown -R dev:dev /home/dev
+#d+ to specific #
+
+#TODO: do one version in two parts (this one), and one in one part. 

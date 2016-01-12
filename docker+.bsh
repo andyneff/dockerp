@@ -12,7 +12,7 @@ fi
 CUR_DIR=`pwd`
 
 shopt -s nocasematch
-#Fot git for windows 1.x running bash 3.1, this is the best option for the 
+#For git for windows 1.x running bash 3.1, this is the best option for the 
 #SOURCE match below. Otherwise a subshell of tr, awk, grep, etc... must be 
 #called for everyline, and that's REALLY slow. This is fast at least
 
@@ -27,10 +27,16 @@ for FILE in "${FILES[@]}"; do
         SOURCE="${CUR_DIR}/${SOURCE}"
       fi
       if [ ! -f "${SOURCE}" ]; then
-        echo "Could not find a readable ${SOURCE}" >& 2
-        exit 1
+        if [ -f "$(dirname ${BASH_SOURCE[0]})/${SOURCE}" ]; then
+          SOURCE="$(dirname ${BASH_SOURCE[0]})/${SOURCE}"
+        else
+          echo "Could not find a readable ${SOURCE}" >& 2
+          exit 1
+        fi
       fi
       "${BASH_SOURCE[0]}" "${SOURCE}" | grep -vi '^FROM' | grep -vi '^MAINTAINER'
+      #run docker+ on the sourced script, this'll support OTHER SOURCE and variable
+      #substitutions
     else
       echo "${LINE}"
     fi

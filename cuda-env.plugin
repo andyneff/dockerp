@@ -1,0 +1,8 @@
+MAINTAINER Andy Neff <andrew.neff@vsi-ri.com>
+
+#Assumes CUDA_VERSION environment variable is set, for example
+#ENV CUDA_VERSION=7.5.14
+
+ENV PATH=/usr/local/cuda-${CUDA_VERSION:0:3}/bin:${PATH}
+    
+RUN echo /usr/local/cuda-${CUDA_VERSION:0:3}/lib64 >> /etc/ld.so.conf

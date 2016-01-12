@@ -1,0 +1,13 @@
+MAINTAINER Andy Neff <andrew.neff@vsi-ri.com>
+
+#Assumes NVIDIA_VERSION environment variable is set, for example
+#ENV NVIDIA_VERSION=352.55
+
+RUN FILENAME=http://us.download.nvidia.com/XFree86/Linux-x86_64/${NVIDIA_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_VERSION}.run && \
+    if [ "$(curl -I ${FILENAME} -w '%{http_code}\n' -o /dev/null -s)" == "200" ]; then \
+      curl -L ${FILENAME} -o nvidia_driver.run && \
+      sh nvidia_driver.run -s --no-network --no-kernel-module && \
+      rm nvidia_driver.run; \
+    else \
+      echo "Todo"; \
+    fi

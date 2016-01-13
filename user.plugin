@@ -1,15 +1,23 @@
 MAINTAINER Andy Neff <andrew.neff@vsi-ri.com>
 
-#TODO, use USER_UID, USER_GID, and USER_NAME, (with default values... dev, 1000, 50 I guess?)
+#Assumes USER_UID, USER_GID, and USER_NAME docker environment variables are set
+#for example, (with default values... dev, 1000, 50 I guess?)
+#Defaults are dev and boot2docker's default user id/group id
 
-RUN groupadd -g 1500 dev && \
-    useradd -u 1500 -g 1500 dev && \
-    echo "dev ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+# Create user
+RUN groupadd ${USER_NAME:-dev}] -og ${USER_GID:-50} && \
+    useradd ${USER_NAME:-dev} -mou ${USER_GID:-1000} -g ${USER_GID:-50} && \
+    echo "${USER_NAME:-dev} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
     sed -i '/requiretty/d' /etc/sudoers
 
-RUN (groupmod -g [{USER_GID:50}] dev || usermod -g [{USER_GID:50}] dev) && \
-    usermod -u [{USER_UID:1000}] dev && \
-    chown -R dev:dev /home/dev
+#RUN groupadd [{USER_NAME:dev}] && \
+#    useradd -g [{USER_NAME:dev}] [{USER_NAME:dev}] && \
+#    echo "[{USER_NAME:dev}] ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+#    sed -i '/requiretty/d' /etc/sudoers
+
+#RUN (groupmod -g [{USER_GID:50}] dev || usermod -g [{USER_GID:50}] dev) && \
+#    usermod -u [{USER_UID:1000}] dev && \
+#    chown -R dev:dev /home/dev
 #d+ to specific #
 
 #TODO: do one version in two parts (this one), and one in one part. 

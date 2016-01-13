@@ -1,0 +1,11 @@
+MAINTAINER Andy Neff <andrew.neff@vsi-ri.com>
+
+#Assumes NVIDIA_VERSION environment variable is set, for example
+#ENV NVIDIA_VERSION=352.55
+
+#This will install the centos 7 repo on a yum enabled operating system
+#Other versions may support zypper or dnf. For docker purposes, it is likely possible
+#To install the centos7 repo in suse, fedora, other...
+
+RUN yum install -y http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-7.5-18.x86_64.rpm epel-release && \
+    yum install -y xorg-x11-drv-nvidia-${NVIDIA_VERSION}

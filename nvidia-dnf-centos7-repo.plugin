@@ -1,0 +1,10 @@
+MAINTAINER Andy Neff <andrew.neff@vsi-ri.com>
+
+#Assumes NVIDIA_VERSION environment variable is set, for example
+#ENV NVIDIA_VERSION=352.55
+
+#This will install the centos 7 repo on a dnf enabled operating system
+#For docker purposes, it is likely to work on newer fedoras
+
+RUN dnf install -y http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-7.5-18.x86_64.rpm && \
+    dnf install -y xorg-x11-drv-nvidia-1:${NVIDIA_VERSION}

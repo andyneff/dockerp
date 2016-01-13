@@ -1,0 +1,14 @@
+MAINTAINER Andy Neff <andrew.neff@vsi-ri.com>
+
+#Assumes USER_UID, USER_GID, and USER_NAME docker environment variables are set
+#for example, (with default values... dev, 1000, 50 I guess?)
+#Defaults are dev and boot2docker's default user id/group id
+
+# Create user, the same EVERY TIME. Useful for putting at the beginning of a 
+# Dockerfile and always use the cache. Use user_post.plugin to set the UID/GID
+RUN groupadd dev && \
+    useradd -g dev dev
+
+#Don't forget
+#USER dev
+#To run docker commands as the user

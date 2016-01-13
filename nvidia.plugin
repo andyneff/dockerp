@@ -9,5 +9,67 @@ RUN FILENAME=http://us.download.nvidia.com/XFree86/Linux-x86_64/${NVIDIA_VERSION
       sh nvidia_driver.run -s --no-network --no-kernel-module && \
       rm nvidia_driver.run; \
     else \
-      echo "Todo"; \
+      echo "This plugin will not support repo only versions of the nvidia driver" && \
+      echo "The BEST option is to update the host to 352.55 or newer. Then this plugin will work" && \
+      echo "Reason: It just gets too complicated to handle automagically. Too many" && \
+      echo "OSes, versions, distros, etc... You can mix and max repos between most" && \
+      echo "rpm/deb oses, but it's best you do it manually." && \
+      echo "For example, checkout the nvidia-yum-centos7-repo plugin. It will" && \
+      echo "work on older fedoras, rhel/centos 6 and 7. Experiment!" && \
+      exit 1; \
     fi
+#This got too complicated. Between fedora, rhel, and centos, the repos are interchangable (REALLY!) but the versions
+#of the drivers do not exist in all of them... Also, DNF SUCKS!
+#There HAS to be an easier way than dnf install xorg-x11-drv-nvidia-1:352.55-1.el7
+# Repo     | Driver versions
+# fedora18     319.21 319.37
+# fedora19                   331.62
+# fedora20                          340.29
+# fedora21                                               346.75 352.39 352.55 352.63 352.68
+# Hidden repos in http://developer.download.nvidia.com/compute/cuda/repos/fedora20/ Can be ignored
+# rhel6 -             319.37 331.62 340.29 343.19 346.46        352.39 352.55 352.63 352.68
+# rhel7 -                                         346.46        352.39 352.55 352.63 352.68
+# opensuse12.2 319.21 319.37
+# opensuse12.3               331.62
+# opensuse13.1                      340.29        346.46
+# opensuse13.2                                    346.46        352.39 352.55 352.63 352.68
+# sles11              319.37 331.62
+# sles11.3                   331.62 340.29        346.46        352.39 352.55 352.63 352.68
+# sles13                                          346.46        352.39 352.55 352.63 352.68
+# ubuntu12.04                331.62 340.29        346.46 Repeated many times?!?!!?
+# ubuntu12.10  319.21 319.37
+# ubuntu13.04                331.62
+# ubuntu14.04                       340.29 343.19 346.46        352.39 352.55 352.63 352.68
+# ubuntu14.10                                     346.46
+# ubuntu15.04                                                   352.39 352.55 352.63 352.68
+
+# already available via the download method...                         352.55 352.63 352.68
+# So Yeah.... 
+#  if [ -f /etc/os-release ]; then \
+#    OS_ID=$(source /etc/os-release; echo ${ID}) && \
+#    OS_LIKE=$(source /etc/os-release; echo ${ID_LIKE}) && \
+#    OS_VERSION=$(source /etc/os-release; echo ${VERSION_ID} | awk '{ print $1}'); \
+#  else if [ -f /etc/redhat-release ]; then \
+#    OS_ID=$(awk '{print $1}' /etc/redhat-release | tr '[:upper:]' '[:lower:]') && \
+#    if [ "${OS_ID}" == "red" ]; then \
+#      OS_ID=rhel; \
+#    fi \
+#    OS_VERSION=$(awk '{print $(NF-1)}' /etc/redhat-release; \
+#  else \
+#    exit 1; \
+#  fi \
+#  OS_VERSION=${OS_VERSION%%.*} && \
+#  case "${OS_ID}" in \
+#    'centos'|'rhel')
+#    'fedora')
+#      if (( ${OS_VERSION} <= 21 ); then
+#        yum install -y http://developer.download.nvidia.com/compute/cuda/repos/fedora21/x86_64/cuda-repo-fedora21-7.5-18.x86_64.rpm
+#        yum install -y xorg-x11-drv-nvidia-${NVIDIA_VERSION}
+#      else
+#        dnf install -y http://developer.download.nvidia.com/compute/cuda/repos/fedora21/x86_64/cuda-repo-fedora21-7.5-18.x86_64.rpm
+#        dnf install -y xorg-x11-drv-nvidia-${NVIDIA_VERSION}
+#      fi
+#    'ubuntu'|'debian')
+#  yum install -y http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-7.5-18.x86_64.rpm epel-release && \
+#   ; \
+#  #If this fails, then the driver version can not be automatically found. Something extra needs to be added for that version

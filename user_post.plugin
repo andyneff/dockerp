@@ -1,0 +1,16 @@
+MAINTAINER Andy Neff <andrew.neff@vsi-ri.com>
+
+#Assumes USER_UID, USER_GID, and USER_NAME docker environment variables are set
+#(with default values... dev, 1000, 50) For example:
+#ENV USER_NAME=dev USER_UID=1005
+#Defaults are dev and boot2docker's default user id/group id
+
+
+#Make the UID/gid match
+RUN usermod -l ${USER_NAME:-dev} dev && \
+    groupmod -l ${USER_NAME:-dev} dev && \
+    groupmod -og ${USER_GID:-50} ${USER_NAME:-dev} && \
+    usermod -ou ${USER_UID:-1000} ${USER_NAME:-dev} && \
+    chown -R ${USER_NAME:-dev}:${USER_NAME:-dev} /home/dev && \
+    echo "${USER_NAME:-dev} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    sed -i '/requiretty/d' /etc/sudoers
